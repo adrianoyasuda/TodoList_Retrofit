@@ -43,10 +43,8 @@ class MainActivity : AppCompatActivity(), TaskAdapterListener {
         taskDao = db.taskDao()
 
         fab_add.setOnClickListener {
-            retrofitSetup()
             addCard()
         }
-
         retrofitSetup()
     }
 
@@ -77,17 +75,16 @@ class MainActivity : AppCompatActivity(), TaskAdapterListener {
     }
 
     private fun loadData(taski : List<Task>) {
-        //val taski = taskDao.getAll()
         adapter = TaskAdapter(taski.toMutableList(), this)
         list_people.adapter = adapter
         list_people.layoutManager = LinearLayoutManager(this,
             RecyclerView.VERTICAL, false)
+        list_people.itemAnimator = null
     }
 
 
 
     override fun taskInsert(task: Task) {
-        //taskDao.insert(task).toInt()
         service.insert(task)
             .enqueue(object : Callback<Task> {
                 override fun onFailure(call: Call<Task>, t: Throwable) {}
@@ -95,13 +92,9 @@ class MainActivity : AppCompatActivity(), TaskAdapterListener {
                     task.id = response.body()!!.id
                 }
             })
-        list_people.scrollToPosition(adapter.addTaskBD(task))
-        //loadData()
     }
 
     override fun taskUpdate(task: Task) {
-        //taskDao.update(task)
-        //loadData()
         service.update(task.id.toLong(), task).enqueue(object : Callback<Task> {
             override fun onFailure(call: Call<Task>, t: Throwable) {}
             override fun onResponse(call: Call<Task>, response: Response<Task>) {}

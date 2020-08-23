@@ -43,12 +43,6 @@ RecyclerView.Adapter<TaskAdapter.ViewHolder>() {
         return 0
     }
 
-    fun addTaskBD(task: Task): Int{
-        tasks.add(0, task)
-        notifyItemInserted(0)
-        return 0
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         ViewHolder(
             LayoutInflater
@@ -94,10 +88,12 @@ RecyclerView.Adapter<TaskAdapter.ViewHolder>() {
                         task.description = itemView.txt_description.text.toString()
 
                         if(task.id == 0) {
+                            taskEditing = null
                             listener.taskInsert(task)
-                            notifyItemInserted(tasks.indexOf(task))
+                            notifyItemChanged(tasks.indexOf(task))
                         }
                         else {
+                            taskEditing = null
                             listener.taskUpdate(task)
                             notifyItemChanged(tasks.indexOf(task))
                         }
